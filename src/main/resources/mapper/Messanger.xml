@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.portfolio.videocourse.dao.messanger.MessangerDAO">
+	
+	<select id="researchFriend" resultType="String">
+		select a.mid
+		from (select mid from video_course_member 
+		where mid like '%'||#{search}||'%') a,
+		(select * from friends_status where userId1=#{mId}) b 
+		where b.userId2!=a.mid
+	</select>
+	
+	
+
+</mapper>

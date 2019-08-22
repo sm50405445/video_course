@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.portfolio.videocourse.dao.lecturer">
+ 	
+ 	<select id="videoListFromLecturer" resultType="com.portfolio.videocourse.vo.lecture.LectureGroupVO">
+ 		select b.*,a.videoGroup from video_upload b,
+ 		(select * from lecture_group) a
+		where b.mid=#{mId} and b.vno=a.vno order by a.videoGroup asc
+ 	</select>
+ 	
+ 	<insert id="insertGroup">
+ 		insert into lecture_group(videoGroup,mid) values(#{videoGroup},#{mId})
+ 	</insert>
+ 	
+ 	<select id="getGroupName" resultType="String">
+ 		select distinct videogroup from lecture_group where mid=#{mid}
+ 	</select>
+ 	
+ 	<update id="changeGroup" parameterType="com.portfolio.videocourse.vo.lecture.LectureGroupVO">
+ 		update lecture_group
+ 		set
+ 		videoGroup = #{videoGroup}
+ 		where
+		vno = #{vno}
+ 	</update>
+ 	
+ </mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.portfolio.videocourse.dao.video.VideoDAO">
+  	<insert id="videoUpload" parameterType="com.portfolio.videocourse.vo.video.VideoVO">
+  		insert into video_upload(
+  			vno,
+  			mId,
+  			title,
+  			uuid,
+  			filename,
+  			udate,
+  			enabled
+  		) 
+  		values(
+  			upload_increment.nextval,
+  			#{mId},
+  			#{title},
+  			#{uuid},
+  			#{fileName},
+  			to_char(sysdate,'yyyy-mm-dd hh24:MI:SS'),
+  			0
+  		)
+  	</insert>
+  	
+  	<select id="videoList" resultType="com.portfolio.videocourse.vo.video.VideoVO">
+  		select vno,mId,title,filename,udate from video_upload
+  	</select>
+  	
+  	<select id="videoDetail" resultType="com.portfolio.videocourse.vo.video.VideoVO">
+  		select * from video_upload where title=#{title}
+  	</select>
+  	
+  	<insert id="commentWrite" parameterType="com.portfolio.videocourse.vo.video.CommentVO">
+  		insert into video_comment values(
+  			comment_increment.nextval,
+  			#{vno},
+  			#{cContent},
+  			0,
+  			0,
+  			0,
+  			#{mId},
+  			to_char(sysdate,'yyyy-mm-dd hh24:MI:SS')
+  		)
+  	</insert>
+  	
+  	<select id="commentList" resultType="com.portfolio.videocourse.vo.video.CommentVO">
+  		select * from video_comment where vno = #{vno} order by cstep asc, cgroup desc, idate desc 
+  	</select>
+  	
+  </mapper>
+  
+  

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="googleConnectionFactory" class="org.springframework.social.google.connect.GoogleConnectionFactory">
+		<constructor-arg value="507136109066-oefq04ufnsiu6cp0vakv4s4m472v8fch.apps.googleusercontent.com"/>
+		<constructor-arg value="F41irNXYpOse-viIMyD5xJm9"/>
+	</bean>
+	
+	<bean id="googleOAuth2Param" class="org.springframework.social.oauth2.OAuth2Parameters">
+		<property name="scope" value="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"/>
+		<property name="redirectUri" value="http://localhost:8090/video_course-project/auth2Callback" />	
+	</bean>
+	
+	<bean id="naverClientId" class="java.lang.String">
+		<constructor-arg value="lwqeEep9PMoaBPluBSDe" />
+	</bean>
+	
+	<bean id="naverClientSecret" class="java.lang.String">
+		<constructor-arg value="kYA2lDVdv1" />
+	</bean>
+	
+	<bean id="naverRedirectUrl" class="java.lang.String">
+		<constructor-arg value="http://localhost:8090/video_course-project/auth/naverCallback" />
+	</bean>
+	
+	<bean id="naverLoginValue" class="com.portfolio.videocourse.vo.auth.LoginAuthVO">
+		<constructor-arg ref="naverRedirectUrl"/>
+		<constructor-arg ref="naverClientId"/>
+		<constructor-arg ref="naverClientSecret"/>
+		<qualifier value="naverLoginValue"></qualifier>
+	</bean>
+	
+</beans>

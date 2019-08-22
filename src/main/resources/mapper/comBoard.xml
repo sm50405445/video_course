@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.portfolio.videocourse.dao.board.Community_Board">
+
+	<insert id="Write">
+			insert into community_board(bno,mId,btitle,bcontent,bdate) values(
+				community_increment.nextval,#{mId},#{btitle},#{bcontent},to_char(sysdate,'yyyy-mm-dd hh24:MI:SS')
+			)
+	</insert>
+	
+	<select id="individualView" resultType="com.portfolio.videocourse.vo.board.Community_BoardVO">
+		select * from community_board where bno=#{bno}
+	</select>
+	
+	<update id="replyShape">
+		update community_board set step = step+1 where bgroup = #{bgroup} and bstep>#{bstep}
+	</update>
+	
+	<insert id="replyWrite">
+		<selectKey keyProperty="bno" order="BEFORE" resultType="int">
+			select coalesce(max(bno+1),1) as bno from community_board
+		</selectKey>
+		insert into community_board values(#{bno},#{mId},#{title},#{bcontent},#{bgroup},#{bstep}+1,#{bindent}+1,to_char(SYSDATE, 'YYYY.MM.DD HH:hh:ss'))
+	</insert>
+	
+	<select id="getAllCount" resultType="int">
+		select count(*) from community_board
+	</select>
+	
+	<select id="list" resultType="com.portfolio.videocourse.vo.board.Community_BoardVO">
+	<![CDATA[
+     select b.*,
+     (select count(*) from community_like where bno=b.bno) blikeCount,
+     (select count(*) from community_comment where bno=b.bno) bcommentCount
+     from
+     (select a.*,rownum rnum
+     from (
+        select * from community_board
+     )a where rownum<#{pageSize}+#{startRow})b where b.rnum>=#{startRow}
+     order by bgroup desc,bstep asc,bno asc]]>
+	</select>
+	
+	<select id="view" resultType="com.portfolio.videocourse.vo.board.Community_BoardVO">
+		select * from community_board where bno=#{bno}
+	</select>
+	
+	<update id="upHit">
+		update community_board set bhit = bhit + 1 where bno=#{bno}
+	</update>
+	
+	<select id="checkLikeId" resultType="Integer" parameterType="com.portfolio.videocourse.vo.board.LikeVO">
+		select count(*) from community_like where bno=#{bno} and mId=#{mId}
+	</select>
+	<!-- 좋아요 -->
+	<insert id="addLike" parameterType="com.portfolio.videocourse.vo.board.LikeVO">
+		insert into community_like(bno,mId) values(#{bno},#{mId})
+	</insert>
+	<!-- 좋아요 삭제 -->
+	<delete id="remLike" parameterType="com.portfolio.videocourse.vo.board.LikeVO">
+		delete from community_like where bno=#{bno} and mId=#{mId}
+	</delete>
+	<!-- 좋아요 총 개수 -->
+	<select id="getLikeCount" resultType="int">
+		select count(*) from community_like where bno=#{bno}
+	</select>
+	
+	<insert id="commentWrite" parameterType="com.portfolio.videocourse.vo.board.CommentVO">
+  		insert into community_comment values(
+  			community_comment_increment.nextval,
+  			#{bno},
+  			#{cContent},
+  			0,
+  			0,
+  			0,
+  			#{mId},
+  			to_char(sysdate,'yyyy-mm-dd hh24:MI:SS')
+  		)
+  	</insert>
+  	
+  	<select id="commentList" resultType="com.portfolio.videocourse.vo.board.CommentVO">
+  		select * from community_comment where bno = #{bno} order by cstep asc, cgroup desc, idate desc 
+  	</select>
+	
+</mapper>
